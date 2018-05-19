@@ -1,0 +1,6 @@
+Django==2.0.5
+django-extensions==2.0.7
+djsingleton==1.0.1
+Pillow==5.1.0
+pytz==2018.4
+six==1.11.0
