@@ -1,0 +1,2 @@
+class ChoiceEnum(object):
+    choices = ()
