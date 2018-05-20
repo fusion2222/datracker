@@ -12,6 +12,10 @@ class Employee(AbstractUser):
     avatar = models.ImageField(upload_to='avatars')
     email = models.EmailField(unique=True)
 
+    class Meta:
+        # We need to override inherited User verbose_name.
+        verbose_name = 'Employee'
+
 
 class SiteSettings(SingletonModel):
     # TODO: performance can be optimized using caching.
