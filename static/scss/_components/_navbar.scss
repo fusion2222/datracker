@@ -1,0 +1,152 @@
+$navbarBreakpoint: 950px; /* Will depend on size of links */
+
+.navbar{
+  background-color: $dark;
+  position: fixed;
+  z-index: 10;
+  width: 100%;
+}
+
+.navbar--logo{
+  width: 230px;
+  height: 60px;
+  position: relative;
+  display: block;
+  font-size: 0;
+  line-height: 0;
+  text-decoration: none;
+  &:hover{
+
+    .navbar--logo--site-name{
+      color: $blueHighlight;
+    }
+
+  }
+
+}
+
+.navbar--logo--image{
+  max-height: 53px;
+  max-width: 53px;
+}
+
+.navbar--logo--site-name{
+  font-size: 30px;
+  line-height: 1;
+  font-weight: bold;
+  display: block;
+  color: $blue;
+  position: absolute;
+  top: 5px;
+  left: 60px;
+}
+
+.navbar--logo--site-slogan{
+  font-size: 17px;
+  line-height: 1;
+  display: block;
+  color: $bright;
+  position: absolute;
+  top: 37px;
+  left: 63px;
+}
+
+.navbar--menu{
+  position: absolute;
+  padding: 0px;
+  margin: 0px;
+  list-style-type: none;
+}
+
+.navbar--menu--link{
+  box-sizing: border-box;
+  text-decoration: none;
+  color: $white;
+}
+
+@media (min-width: $navbarBreakpoint + 1){
+
+  .navbar--menu{
+    height: 100%;
+    right: $space;
+    top: 0px;
+  }
+
+  .navbar--menu--item{
+    display: inline-block;
+    height: 100%;
+    padding: 0px 10px;
+    &.active{
+      box-shadow: inset 0px -6px 0px 0px $blue;
+    }
+
+  }
+
+  .navbar--menu--link{
+    display: block;
+    height: 100%;
+    padding-top: 25px;
+    &:hover{
+      color: $blueHighlight;
+    }
+  }
+
+  .navbar--menu-toggle{
+    display: none;
+  }
+
+}
+
+@media (max-width: $navbarBreakpoint){
+
+  .navbar--menu{
+    background-color: $blue;
+    top: 100%;
+    right: 0px;
+    padding: $space/2 $space;
+    display: none;
+  }
+
+  .navbar.open{
+
+    .navbar--menu-toggle{
+      background-color: $blue;
+    }
+
+    .navbar--menu{
+      display: block;
+    }
+
+  }
+
+
+
+  .navbar--menu--link{
+    display: block;
+    padding: 10px;
+  }
+
+  .navbar--menu-toggle{
+    display: block;
+    position: absolute;
+    padding: 0px 20px;
+    top: 0px;
+    right: 0px;
+    height: 100%;
+    font-size: 50px;
+    color: $white;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    line-height: 1;
+
+    &:before{
+      position: relative;
+      top: -6px;
+      content: "\2630";
+    }
+
+  }
+
+}

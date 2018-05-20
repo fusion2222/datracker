@@ -34,7 +34,7 @@
   background-color: $blue;
 
   &:hover, &:focus{
-    background-color: #77c1ef;
+    background-color: $blueHighlight;
   }
 
 }

@@ -1,0 +1,12 @@
+.logo-svg{
+  &.bright{
+    .logo-svg--body, .logo-svg--pointers{
+      fill: $bright;
+    }
+  }
+  &.dark{
+    .logo-svg--body, .logo-svg--pointers{
+      fill: $dark;
+    }
+  }
+}
