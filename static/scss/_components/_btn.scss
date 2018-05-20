@@ -1,0 +1,40 @@
+.btn{
+  display: inline-block;
+  color: $white;
+  font-size: 1.2rem;
+  box-sizing: border-box;
+  padding: $space/2 $space;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  outline: 0;
+  border: 0;
+
+  &:active{
+    top: 1px;
+    left: 1px;
+  }
+
+  &:disabled{
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+}
+
+.btn-small{
+  font-size: 1rem;
+  padding: $space/4 $space/2;
+}
+
+
+.btn-primary{
+  background-color: $blue;
+
+  &:hover, &:focus{
+    background-color: #77c1ef;
+  }
+
+}
