@@ -1,0 +1,52 @@
+{% extends 'pages/base.html' %}
+
+{% block content %}
+
+    <p>{{ page.content }}</p>
+    <table class="datatable">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Category</td>
+                <td>Assignee</td>
+                <td>Created</td>
+                <td>Solved</td>
+                <td>Status</td>
+                <td>View</td>
+                {% if perms.datracker.can_delete_issue %}
+                    <td>Delete</td>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for issue in issues %}
+                <tr>
+                    <td>#{{ issue.pk }}</td>
+                    <td>{{ issue.name }}</td>
+                    <td>{{ issue.category.name }}</td>
+                    <td>{{ issue.assignee.name }}</td>
+                    <td>{{ issue.created|date:"G:i j.n.Y" }}</td>
+                    <td>{{ issue.solved|date:"G:i j.n.Y" }}</td>
+                    <td>{{ issue.is_solved|yesno:"Closed,Opened" }}</td>
+                    <td class="datatable--view-icon"><a href="{{ issue.get_absolute_url }}" class="datatable--icon-link">detail</a></td>
+                    {% if perms.datracker.can_delete_issue %}
+                        <td class="datatable--delete-icon"><a href="#" class="datatable--icon-link">&#10005;</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
+
+{% block extra_script %}
+    <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('.datatable').DataTable();
+        } );
+    </script>
+{% endblock %}

@@ -1,14 +1,15 @@
-from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-
+from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
+
+from django.http import Http404, HttpResponseRedirect
 
 from datracker.forms import LoginForm
 from datracker.enums import Pages
-from datracker.models import Page
+from datracker.models import Issue, Page
 
 
 class LoginView(FormView):
@@ -42,7 +43,7 @@ class IndexView(RedirectView):
     pattern_name = 'page-detail'
 
     def get_redirect_url(self, *args, **kwargs):
-        page_pk = Pages.DASHBOARD if self.request.user else Pages.ABOUT
+        page_pk = Pages.DASHBOARD if self.request.user.is_authenticated else Pages.ABOUT
         kwargs.update(
             Page.objects.filter(pk=page_pk).values('slug').first()
         )
@@ -55,9 +56,45 @@ class PageView(DetailView):
     template_name = 'pages/base.html'
 
     def get_object(self, *args, **kwargs):
-        object = super().get_object(*args, **kwargs)
+        page = super().get_object(*args, **kwargs)
 
-        if object.pk == Pages.ABOUT:
+        if not page.can_be_seen_by(self.request.user):
+            raise Http404('Page is not found')
+
+        return page
+
+    def get_context_data(self, *args, **kwargs):
+
+        context = super().get_context_data(*args, **kwargs)
+
+        if self.object.pk == Pages.ABOUT:
             self.template_name = 'pages/index.html'
+        elif self.object.pk == Pages.ISSUES:
+            self.template_name = 'issues/list.html'
+            context['issues'] = Issue.objects.all().order_by('-created')
 
-        return object
+        return context
+
+
+class IssueView(UpdateView):
+    model = Issue
+    template_name = 'issues/update.html'
+    fields = ['name', 'description', 'assignee', 'category']
+
+    def get_form(self, *args, **kwargs):
+
+        # can_be_solved_by
+        output = super().get_form(*args, **kwargs)
+
+        if not self.request.user.has_perm('can_change_issue'):
+            for field_name, field in output.fields.items():
+                field.disabled = True
+
+        return output
+
+    def post(self, *args, **kwargs):
+
+        if 'resolve' in self.request.POST:
+            messages.add_message(self.request, messages.WARNING, 'Issue resolution is not yet working. Coming on soon.')
+
+        return super().post(*args, **kwargs)

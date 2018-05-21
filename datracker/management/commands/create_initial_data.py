@@ -1,11 +1,12 @@
 import random
 from datetime import timedelta
+
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
+from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 
-
-from django.core.management.base import BaseCommand, CommandError
 from datracker.models import Employee, Page, Issue, IssueCategory
-
 from datracker.enums import IssueCategories, Pages
 
 
@@ -170,6 +171,8 @@ class Command(BaseCommand):
 
     total_issues = 66
 
+    employee_auth_group_permissions_data = ["close_issue"]
+
     def _create_pages(self):
 
         # Pages
@@ -196,6 +199,23 @@ class Command(BaseCommand):
                 )
             ))
 
+    def _create_user_groups(self):
+
+        Group.objects.all().delete()
+
+        self.employee_user_group = Group.objects.create(name='Employees')
+
+        ct = ContentType.objects.get_for_model(Issue)
+        permission = Permission.objects.get(codename='close_issue', content_type=ct)
+
+        self.employee_user_group.permissions.add(permission)
+
+        self.stdout.write(self.style.SUCCESS(
+            'User group {} has been succesfully created.'.format(
+                self.employee_user_group.name,
+            )
+        ))
+
     def _create_employees(self):
         # Employees
         Employee.objects.all().delete()
@@ -204,6 +224,7 @@ class Command(BaseCommand):
             employee['is_staff'] = True
             employee['password'] = common_password
             new_employee = Employee.objects.create_user(**employee)
+            self.employee_user_group.user_set.add(new_employee)
             self.employees.append(new_employee)
             self.stdout.write(self.style.SUCCESS(
                 'Employee #{} has been succesfully created. Login: {} Password: {}'.format(
@@ -280,6 +301,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self._create_pages()
         self._create_issue_categories()
+        self._create_user_groups() # just create it
         self._create_employees()
         self._create_superuser()
         self._create_issues()

@@ -6,7 +6,7 @@ def navbar_menu(request):
 
     pages = Page.objects.all().order_by('pk')
 
-    output = [{'label': page.label, 'url': page.get_absolute_url()} for page in pages]
+    output = [{'label': page.label, 'url': page.get_absolute_url()} for page in pages if page.can_be_seen_by(request.user)]
 
     if request.user.is_authenticated:
         output.append({'label': 'Logout', 'url': reverse('logout')})

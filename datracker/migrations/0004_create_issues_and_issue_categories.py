@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('assignee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'permissions': (('close_issue', 'Can remove a task by setting its status as closed'),),
+                'permissions': (('close_issue', 'Can close unfinished issue assigned to self'),),
             },
         ),
         migrations.CreateModel(

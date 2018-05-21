@@ -5,6 +5,8 @@ from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from django.urls import reverse
 
+from datracker.enums import Pages
+
 
 class Employee(AbstractUser):
 
@@ -13,6 +15,10 @@ class Employee(AbstractUser):
 
     avatar = models.ImageField(upload_to='avatars')
     email = models.EmailField(unique=True)
+
+    @property
+    def name(self):
+        return '{} {}'.format(self.first_name, self.last_name)
 
     class Meta:
         # We need to override inherited User verbose_name.
@@ -32,6 +38,9 @@ class SiteSettings(SingletonModel):
 
 
 class Page(TimeStampedModel):
+
+    public_pages = [Pages.ABOUT, Pages.FAQ]
+
     title = models.CharField(
         max_length=150, help_text='Main title displayed on top of each page', default=''
     )
@@ -50,6 +59,13 @@ class Page(TimeStampedModel):
     slug = models.SlugField(
         max_length=50, help_text='Specifies name of page in URL address.', unique=True
     )
+
+    @property
+    def is_private(self):
+        return self.pk not in self.public_pages
+
+    def can_be_seen_by(self, user):
+        return not self.is_private or user.is_authenticated and self.is_private
 
     def get_absolute_url(self):
         return reverse('page-detail', kwargs={'slug': self.slug})
@@ -96,10 +112,21 @@ class Issue(TimeStampedModel):
     )
     solved = models.DateTimeField(help_text='Indicates when issue was solved.', null=True)
 
+    def get_absolute_url(self):
+        return reverse('issue-update', kwargs={'pk': self.pk})
+
+    def can_be_solved_by(self, employee):
+        return not self.is_solved and employee.perms and self.request.user.has_perm('can_change_issue')
+
+    @property
+    def is_solved(self):
+        """Currently are conditions simple. However in future it may change."""
+        return self.solved is not None
+
     def __str__(self):
         return '<Issue #{} {}>'.format(self.pk, self.name)
 
     class Meta:
         permissions = (
-            ('close_issue', 'Can remove a task by setting its status as closed'),
+            ('close_issue', 'Can close unfinished issue assigned to self'),
         )
