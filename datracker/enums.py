@@ -14,3 +14,19 @@ class Pages(ChoiceEnum):
         (FAQ, 'FAQ'),
         (ISSUES, 'Issues')
     )
+
+
+class IssueCategories(ChoiceEnum):
+    DEVELOPMENT = 1
+    PERSONAL = 2
+    DOCUMENTATION = 3
+    RELIGIOUS = 4
+    POLITICAL = 5
+
+    choices = (
+        (DEVELOPMENT, 'Development'),
+        (PERSONAL, 'Personal'),
+        (DOCUMENTATION, 'Documentation'),
+        (RELIGIOUS, 'Religious'),
+        (POLITICAL, 'Political'),
+    )

@@ -58,3 +58,48 @@ class Page(TimeStampedModel):
         return '<{} #{} {}>'.format(
             self.__class__.__name__, self.pk, self.title[:20]
         )
+
+
+class IssueCategory(TimeStampedModel):
+    name = models.CharField(
+        max_length=150, help_text='Category name', default=''
+    )
+    description = models.TextField(
+        max_length=200,
+        help_text='Larger descriptive text about category.',
+        default=''
+    )
+
+    class Meta:
+        verbose_name_plural = "Issue Categories"
+
+    def __str__(self):
+        return '<IssueCategory #{} {}>'.format(self.pk, self.name)
+
+
+class Issue(TimeStampedModel):
+    name = models.CharField(
+        max_length=150, help_text='Category name', default=''
+    )
+    description = models.TextField(
+        max_length=800,
+        help_text='Larger descriptive text about Issue',
+        default=''
+    )
+    category = models.ForeignKey(
+        'IssueCategory',
+        on_delete=models.CASCADE,
+    )
+    assignee = models.ForeignKey(
+        'Employee',
+        on_delete=models.CASCADE,
+    )
+    solved = models.DateTimeField(help_text='Indicates when issue was solved.', null=True)
+
+    def __str__(self):
+        return '<Issue #{} {}>'.format(self.pk, self.name)
+
+    class Meta:
+        permissions = (
+            ('close_issue', 'Can remove a task by setting its status as closed'),
+        )

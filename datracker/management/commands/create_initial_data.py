@@ -1,7 +1,17 @@
-from django.core.management.base import BaseCommand, CommandError
-from datracker.models import Employee, Page
+import random
+from datetime import timedelta
+from django.utils import timezone
 
-from datracker.enums import Pages
+
+from django.core.management.base import BaseCommand, CommandError
+from datracker.models import Employee, Page, Issue, IssueCategory
+
+from datracker.enums import IssueCategories, Pages
+
+
+lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia bibendum quam id cursus. Mauris vehicula ante vel velit gravida, vel porta tortor ornare."
+
+common_password = 'password'
 
 
 class Command(BaseCommand):
@@ -16,7 +26,7 @@ class Command(BaseCommand):
             "slug": "about",
             "meta_title": "What is DaTracker?",
             "meta_description": "Wold-class company-management app. Track performance of your employees now!",
-            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia bibendum quam id cursus. Mauris vehicula ante vel velit gravida, vel porta tortor ornare.",
+            "content": lorem_ipsum,
         },
         {
             "pk": Pages.DASHBOARD,
@@ -25,7 +35,7 @@ class Command(BaseCommand):
             "slug": "dashboard",
             "meta_title": "DaTracker - Dashboard",
             "meta_description": "Company & Tasks.",
-            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia bibendum quam id cursus. Mauris vehicula ante vel velit gravida, vel porta tortor ornare.",
+            "content": lorem_ipsum,
         },
         {
             "pk": Pages.ISSUES,
@@ -34,7 +44,7 @@ class Command(BaseCommand):
             "slug": "issues",
             "meta_title": "DaTracker - Issues",
             "meta_description": "Check status of Issues.",
-            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia bibendum quam id cursus. Mauris vehicula ante vel velit gravida, vel porta tortor ornare.",
+            "content": lorem_ipsum,
         },
         {
             "pk": Pages.FAQ,
@@ -43,12 +53,126 @@ class Command(BaseCommand):
             "slug": "faq",
             "meta_title": "DaTracker - FAQ",
             "meta_description": "Considering using DaTracker? Check this out.",
-            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia bibendum quam id cursus. Mauris vehicula ante vel velit gravida, vel porta tortor ornare.",
+            "content": lorem_ipsum,
         },
     ]
 
-    def handle(self, *args, **options):
+    data_issue_category = [
+        {
+            "pk": IssueCategories.DEVELOPMENT,
+            "name": "Development tasks",
+            "description": lorem_ipsum,
+        },
+        {
+            "pk": IssueCategories.PERSONAL,
+            "name": "Personal issues",
+            "description": lorem_ipsum,
+        },
+        {
+            "pk": IssueCategories.DOCUMENTATION,
+            "name": "Neccesity to write docs",
+            "description": lorem_ipsum,
+        },
+        {
+            "pk": IssueCategories.RELIGIOUS,
+            "name": "Religious duty",
+            "description": lorem_ipsum,
+        },
+        {
+            "pk": IssueCategories.POLITICAL,
+            "name": "Political promotion",
+            "description": lorem_ipsum,
+        },
+    ]
 
+    data_employees = [
+        {
+            "first_name": "Michael",
+            "last_name": "Tucket",
+            "username": "michael.tucken",
+            "email": "tucken.michael@gamail.com",
+        },
+        {
+            "first_name": "Larkin",
+            "last_name": "Mooze",
+            "username": "larkin.mooze",
+            "email": "larkin.mooze@gamail.com",
+        },
+        {
+            "first_name": "Salem",
+            "last_name": "Machlavi",
+            "username": "salem.machlavi",
+            "email": "salem.machlavi@gamail.com",
+        },
+        {
+            "first_name": "Robert",
+            "last_name": "Dunick",
+            "username": "robert.dunick",
+            "email": "robert.dunick@gamail.com",
+        },
+        {
+            "first_name": "Veronica",
+            "last_name": "Viley",
+            "username": "veronica.viley",
+            "email": "veronica.viley@gamail.com",
+        },
+        {
+            "first_name": "Martin",
+            "last_name": "Summett",
+            "username": "martin.summett",
+            "email": "martin.summett@gamail.com",
+        },
+        {
+            "first_name": "Charles",
+            "last_name": "Wacklow",
+            "username": "charles.wacklow",
+            "email": "charles.wacklow@gamail.com",
+        },
+        {
+            "first_name": "Brendan",
+            "last_name": "Hickey",
+            "username": "brendan.hickey",
+            "email": "brendan.hickey@gamail.com",
+        },
+        {
+            "first_name": "Joseph",
+            "last_name": "Malstein",
+            "username": "joseph.malstein",
+            "email": "joseph.malstein@gamail.com",
+        },
+        {
+            "first_name": "Michael",
+            "last_name": "Torfu",
+            "username": "michael.torfu",
+            "email": "michael.torfu@gamail.com",
+        },
+    ]
+
+    data_issue_names = [
+        'Test C++ desktop program',
+        'Make JVM documentation',
+        'Repar broken chair',
+        'Read cryptography manual',
+        'Design architecture',
+        'Analyze marketing data',
+        'Install new Java version',
+        'Launch web marketing campaign',
+        'Add new model structure to Android App',
+        'Learn Rust Language',
+        'Meeting with a client',
+        'Go to church and ask god for help',
+        'Investigate network issues',
+    ]
+
+    issue_categories = []
+
+    employees = []
+
+    total_issues = 66
+
+    def _create_pages(self):
+
+        # Pages
         Page.objects.all().delete()
 
         for page in self.data_page:
@@ -58,6 +182,106 @@ class Command(BaseCommand):
                 'Page #{} {} has been succesfully created.'.format(new_page.pk, new_page.title)
             ))
 
-        # raise CommandError('Command failed does not exist')
+    def _create_issue_categories(self):
+        # Issue Categories
+        IssueCategory.objects.all().delete()
+
+        for issue_category in self.data_issue_category:
+
+            new_category = IssueCategory.objects.create(**issue_category)
+            self.issue_categories.append(new_category)
+            self.stdout.write(self.style.SUCCESS(
+                'IssueCategory #{} {} has been succesfully created.'.format(
+                    new_category.pk, new_category.name
+                )
+            ))
+
+    def _create_employees(self):
+        # Employees
+        Employee.objects.all().delete()
+
+        for employee in self.data_employees:
+            employee['is_staff'] = True
+            employee['password'] = common_password
+            new_employee = Employee.objects.create_user(**employee)
+            self.employees.append(new_employee)
+            self.stdout.write(self.style.SUCCESS(
+                'Employee #{} has been succesfully created. Login: {} Password: {}'.format(
+                    new_employee.pk,
+                    new_employee.username,
+                    common_password,
+                )
+            ))
+
+    def _create_superuser(self):
+        # Additionally lets create a superuser
+        new_employee = Employee.objects.create_superuser(**{
+            'first_name': 'Marshall',
+            'last_name': 'Hammond',
+            'username': 'admin',
+            'email': 'admin@admin.gamail',
+            'password': common_password,
+        })
+        self.employees.append(new_employee)
+        self.stdout.write(self.style.SUCCESS(
+            'Additional superuser Employee #{} has been created! Login: {} Password: {}'.format(
+                new_employee.pk,
+                new_employee.username,
+                common_password,
+            )
+        ))
+
+    def _create_issues(self):
+        # Issues
+        Issue.objects.all().delete()
+
+        now = timezone.now()
+
+        total_issue_names = []
+
+        for i in range(self.total_issues):
+            total_issue_names.append(random.choice(self.data_issue_names))
+
+        for issue_name in total_issue_names:
+
+            randomized_create_date = now - timedelta(
+                seconds=random.randint(1, 60),
+                minutes=random.randint(1, 60),
+                days=random.randint(38,159),
+            )
+
+            if random.randint(1, 4) == 1:
+                randomized_solved_date = None
+            else:
+                randomized_solved_date = now - timedelta(
+                    seconds=random.randint(1, 60),
+                    minutes=random.randint(1, 60),
+                    days=random.randint(1,38),
+                )
+
+            new_issue = Issue.objects.create(
+                name=issue_name,
+                description=lorem_ipsum,
+                created=randomized_create_date,
+                solved=randomized_solved_date,
+                category=random.choice(self.issue_categories),
+                assignee=random.choice(self.employees),
+            )
+
+            new_issue.created = randomized_create_date
+            new_issue.save()
+
+            self.stdout.write(
+                self.style.SUCCESS('Issue #{} {} has been succesfully generated.'.format(
+                    new_issue.pk, new_issue.name
+                ))
+            )
+
+    def handle(self, *args, **options):
+        self._create_pages()
+        self._create_issue_categories()
+        self._create_employees()
+        self._create_superuser()
+        self._create_issues()
 
         self.stdout.write(self.style.SUCCESS('Initial data were succesfully generated.'))
