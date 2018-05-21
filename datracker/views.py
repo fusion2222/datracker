@@ -23,6 +23,10 @@ class LoginView(FormView):
     success_message = "%(first_name)s %(last_name)s is logged in!"
 
     def get_form_kwargs(self):
+        """
+        LoginForm needs to have a request in order to make authentication.
+        In this function request is sent to LoginForm.
+        """
         kwargs = super().get_form_kwargs()
         kwargs.update({'request': self.request})
         return kwargs
@@ -34,7 +38,6 @@ class LogoutView(RedirectView):
     pattern_name = 'index'
 
     def get_redirect_url(self, *args, **kwargs):
-
         if self.request.user.is_authenticated:
             logout(self.request)
 
@@ -47,6 +50,9 @@ class IndexView(RedirectView):
     pattern_name = 'page-detail'
 
     def get_redirect_url(self, *args, **kwargs):
+        """
+        If visited as unauthenticated, we shoukld show About page. Otherwise Dashboard page.
+        """
         page_pk = Pages.DASHBOARD if self.request.user.is_authenticated else Pages.ABOUT
         kwargs.update(
             Page.objects.filter(pk=page_pk).values('slug').first()
@@ -62,21 +68,19 @@ class PageView(DetailView):
     def get_object(self, *args, **kwargs):
         page = super().get_object(*args, **kwargs)
 
+        # Most of pages are visible only for logged users.
         if not page.can_be_seen_by(self.request.user):
             raise Http404('Page is not found')
 
         return page
 
-    def get_dashboard_stats(self):
+    def _get_dashboard_issue_aggregates(self, output):
         """
-        This method returns aggregation used for dashboard.
-        :return: dictionary
+        Appends Issue aggregates for dashboard to output.
         """
-        output = {}
-
         issues = Issue.objects.exclude(solved__isnull=True).annotate(
             solving_time_duration=ExpressionWrapper(
-                # Note: We cant use DurationField here! SQLlite can not run Avg on it.
+                # We cant use DurationField here! SQLlite can not run Avg on it.
                 # Casting duration into IntegerField converts our data to microseconds.
                 F('solved') - F('created'), output_field=IntegerField()
             )
@@ -95,9 +99,15 @@ class PageView(DetailView):
         )
 
         for key, value in output.items():
+            # IntegerField from aggregation returned microseconds. They are converted here
+            # into seconds, and round them so we dont have output like 2 Days 12:14:063423...
             duration = timedelta(seconds=round(value / 1000000))
             output[key] = str(duration)
 
+    def _get_dashboard_employee_aggregates(self, output):
+        """
+        Appends Employee aggregates for dashboard to output.
+        """
         employees = get_user_model().objects.annotate(solved_issues_count=Count('issue'))
 
         output.update(
@@ -112,6 +122,16 @@ class PageView(DetailView):
             employees.aggregate(avg_issues_assigned=Avg('solved_issues_count'))
         )
 
+    def get_dashboard_stats(self):
+        """
+        This method returns all aggregate data used for dashboard.
+        :return: dictionary
+        """
+        output = {}
+
+        self._get_dashboard_issue_aggregates(output)
+        self._get_dashboard_employee_aggregates(output)
+
         output.update(
             {
                 'total_unresolved_issues': Issue.objects.filter(solved__isnull=True).count(),
@@ -121,14 +141,19 @@ class PageView(DetailView):
         return output
 
     def get_context_data(self, *args, **kwargs):
-
+        """
+        If any page needs any special content or template,
+        this is where it should be handled.
+        """
         context = super().get_context_data(*args, **kwargs)
 
         if self.object.pk == Pages.ABOUT:
             self.template_name = 'pages/index.html'
+
         if self.object.pk == Pages.DASHBOARD:
             self.template_name = 'pages/dashboard.html'
             context.update(self.get_dashboard_stats())
+
         elif self.object.pk == Pages.ISSUES:
             self.template_name = 'issues/list.html'
             context['issues'] = Issue.objects.all().order_by('-created')
@@ -142,8 +167,10 @@ class IssueView(UpdateView):
     fields = ['name', 'description', 'assignee', 'category']
 
     def get_form(self, *args, **kwargs):
-
-        # can_be_solved_by
+        """
+        Ordinary Employees can see an Issue, however they cannot to edit it. In case
+        Employee is not privileged, form will be returned to him, but disabled.
+        """
         output = super().get_form(*args, **kwargs)
 
         if not self.request.user.has_perm('can_change_issue'):
@@ -153,7 +180,10 @@ class IssueView(UpdateView):
         return output
 
     def post(self, *args, **kwargs):
-
+        """
+        TODO: In future, Employees will be able to set save 'ended' date,
+        if the Issue is assigned to them.
+        """
         if 'resolve' in self.request.POST:
             messages.add_message(self.request, messages.WARNING, 'Issue resolution is not yet working. Coming on soon.')
 

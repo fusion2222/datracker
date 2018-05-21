@@ -3,6 +3,9 @@ from django.contrib.auth import authenticate, login
 
 
 class LoginForm(forms.Form):
+    """
+    Custom login form.
+    """
     username = forms.CharField(
         label='Username', max_length=100, required=True)
     password = forms.CharField(

@@ -62,6 +62,10 @@ class Page(TimeStampedModel):
 
     @property
     def is_private(self):
+        """
+        Checks if Page should be visible by anonymous users.
+        Beware, Login and Logout subpages do not count here.
+        """
         return self.pk not in self.public_pages
 
     def can_be_seen_by(self, user):
@@ -123,7 +127,9 @@ class Issue(TimeStampedModel):
 
     @property
     def is_solved(self):
-        """Currently are conditions simple. However in future it may change."""
+        """
+        Currently are conditions simple. However in future it may change.
+        """
         return self.solved is not None
 
     def __str__(self):
