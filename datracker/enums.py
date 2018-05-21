@@ -1,5 +1,15 @@
+
+
 class ChoiceEnum(object):
     choices = ()
+
+    @classmethod
+    def keys(cls):
+        return [key for key, value in cls.choices]
+
+    @classmethod
+    def labels(cls):
+        return [value for key, value in cls.choices]
 
 
 class Pages(ChoiceEnum):
