@@ -14,7 +14,7 @@
                 <td>Solved</td>
                 <td>Status</td>
                 <td>View</td>
-                {% if perms.datracker.can_delete_issue %}
+                {% if perms.datracker.delete_issue %}
                     <td>Delete</td>
                 {% endif %}
             </tr>
@@ -29,9 +29,15 @@
                     <td>{{ issue.created|date:"G:i j.n.Y" }}</td>
                     <td>{{ issue.solved|date:"G:i j.n.Y" }}</td>
                     <td>{{ issue.is_solved|yesno:"Closed,Opened" }}</td>
-                    <td class="datatable--view-icon"><a href="{{ issue.get_absolute_url }}" class="datatable--icon-link">detail</a></td>
-                    {% if perms.datracker.can_delete_issue %}
-                        <td class="datatable--delete-icon"><a href="#" class="datatable--icon-link">&#10005;</a></td>
+                    <td class="datatable--view-icon">
+                        <a href="{{ issue.get_absolute_url }}" class="datatable--icon-link">detail</a>
+                    </td>
+                    {% if perms.datracker.delete_issue %}
+                        <td class="datatable--delete-icon">
+                            <a href="{{ issue.get_delete_url }}" class="datatable--icon-link">
+                                &#10005;
+                            </a>
+                        </td>
                     {% endif %}
                 </tr>
             {% endfor %}
