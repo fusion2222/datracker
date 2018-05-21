@@ -11,7 +11,7 @@
         </a>
         <ul class="navbar--menu">
             {% for link in navbar_links %}
-                <li class="navbar--menu--item"><a href="{{ link.url }}" class="navbar--menu--link">{{ link.label }}</a></li>
+                <li class="navbar--menu--item {% if link.url == request.path %}active{% endif %}"><a href="{{ link.url }}" class="navbar--menu--link">{{ link.label }}</a></li>
             {% endfor %}
         </ul>
         <button type="button" class="navbar--menu-toggle js-navbar--toggle"></button>
