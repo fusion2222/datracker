@@ -1,4 +1,4 @@
-from django.template.response import HttpResponse
+from django.template.response import TemplateResponse
 
 def index(request):
-    return HttpResponse('Works perfectly!')
+    return TemplateResponse(request, 'base.html', {"title": "test"})
