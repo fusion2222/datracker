@@ -1,0 +1,52 @@
+.datatable{
+  font-size: 0.8rem;
+  cell-spacing: 0px;
+  border-spacing: 0;
+  border-collapse: separate;
+
+  thead{
+    background-color: $dark;
+    color: $bright;
+    cursor: pointer;
+  }
+
+  td{
+    padding: 5px 0px;
+  }
+
+}
+
+.datatable--icon-link{
+  text-decoration: none;
+  color: $blue;
+  &:hover{
+    color: $blueHighlight;
+  }
+}
+
+.datatable--edit-icon{
+  font-size: 1.6rem;
+}
+
+.datatable--delete-icon{
+  font-size: 2rem;
+}
+
+table.dataTable tbody tr.odd{
+  background-color: $bright;
+}
+
+table.dataTable tbody tr.even{
+  background-color: $white;
+}
+
+table.dataTable tbody tr.even td.sorting_1{
+  background-color: $bright;
+}
+table.dataTable tbody tr.odd td.sorting_1{
+  background-color: #cfcfcf;
+}
+
+table.dataTable tr td{
+  padding: 5px 5px;
+}

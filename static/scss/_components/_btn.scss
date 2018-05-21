@@ -43,3 +43,13 @@
   }
 
 }
+
+.btn-success{
+    background-color: $statusSuccess;
+    color:white;
+
+    &:hover, &:focus{
+      background-color: $statusSuccessLight;
+    }
+
+}

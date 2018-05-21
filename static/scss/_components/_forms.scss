@@ -2,7 +2,6 @@
   display: block;
 }
 
-
 .form-small{
   width: 450px;
 }
@@ -20,5 +19,12 @@
   font-size: 1rem;
   &:active, &:focus{
     background-color: $inputActive;
+  }
+  &:disabled{
+    background-color: #d1d1d1;
+    cursor: not-allowed;
+    &:active, &:focus{
+      background-color: #d1d1d1;
+    }
   }
 }
