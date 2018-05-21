@@ -1,12 +1,13 @@
 import random
 from datetime import timedelta
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 
-from datracker.models import Employee, Page, Issue, IssueCategory
+from datracker.models import Page, Issue, IssueCategory
 from datracker.enums import IssueCategories, Pages
 
 
@@ -218,12 +219,12 @@ class Command(BaseCommand):
 
     def _create_employees(self):
         # Employees
-        Employee.objects.all().delete()
+        get_user_model().objects.all().delete()
 
         for employee in self.data_employees:
             employee['is_staff'] = True
             employee['password'] = common_password
-            new_employee = Employee.objects.create_user(**employee)
+            new_employee = get_user_model().objects.create_user(**employee)
             self.employee_user_group.user_set.add(new_employee)
             new_employee.save()
             self.employees.append(new_employee)
@@ -237,7 +238,7 @@ class Command(BaseCommand):
 
     def _create_superuser(self):
         # Additionally lets create a superuser
-        new_employee = Employee.objects.create_superuser(**{
+        new_employee = get_user_model().objects.create_superuser(**{
             'first_name': 'Marshall',
             'last_name': 'Hammond',
             'username': 'admin',

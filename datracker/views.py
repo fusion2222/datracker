@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django.db.models import Avg, Count, F, IntegerField, Max, Min, ExpressionWrapper
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
@@ -13,7 +13,7 @@ from django.http import Http404, HttpResponseRedirect
 
 from datracker.forms import LoginForm
 from datracker.enums import Pages
-from datracker.models import Issue, Page, Employee
+from datracker.models import Issue, Page
 
 
 class LoginView(FormView):
@@ -98,7 +98,7 @@ class PageView(DetailView):
             duration = timedelta(seconds=round(value / 1000000))
             output[key] = str(duration)
 
-        employees = Employee.objects.annotate(solved_issues_count=Count('issue'))
+        employees = get_user_model().objects.annotate(solved_issues_count=Count('issue'))
 
         output.update(
             employees.aggregate(max_issues_assigned=Max('solved_issues_count'))
