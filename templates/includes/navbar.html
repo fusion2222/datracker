@@ -10,13 +10,9 @@
             <span class="navbar--logo--site-slogan">{{ site_settings.site_slogan }}</span>
         </a>
         <ul class="navbar--menu">
-            <li class="navbar--menu--item"><a href="#" class="navbar--menu--link">Home</a></li>
-            <li class="navbar--menu--item active"><a href="#" class="navbar--menu--link">About us</a></li>
-            <li class="navbar--menu--item"><a href="#" class="navbar--menu--link">Dashboard</a></li>
-            <li class="navbar--menu--item"><a href="#" class="navbar--menu--link">Employees</a></li>
-            <li class="navbar--menu--item"><a href="#" class="navbar--menu--link">Issues</a></li>
-            <li class="navbar--menu--item"><a href="#" class="navbar--menu--link">FAQ</a></li>
-            <li class="navbar--menu--item"><a href="#" class="navbar--menu--link">Logout</a></li>
+            {% for link in navbar_links %}
+                <li class="navbar--menu--item"><a href="{{ link.url }}" class="navbar--menu--link">{{ link.label }}</a></li>
+            {% endfor %}
         </ul>
         <button type="button" class="navbar--menu-toggle js-navbar--toggle"></button>
     </div>
