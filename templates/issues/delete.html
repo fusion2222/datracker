@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load filters %}
+{% block title %}Do you really want to delete Issue #{{ issue.pk }} - {{ issue.name }}?{% endblock %}
+
+{% block content %}
+    <span><b>Status:</b> {{ issue.is_solved|yesno:"Solved,Opened" }}</span> |
+    <span><b>Last modified:</b> {{ issue.modified|date:"G:i j.n.Y" }}</span> |
+    <span><b>Issue created at:</b> {{ issue.created|date:"G:i j.n.Y" }}</span> |
+    <span><b>Issue Solved at:</b> {{ issue.solved|date:"G:i j.n.Y" }}</span>
+    <form action="{{ issue.get_delete_url }}" method="POST">
+        {% csrf_token %}
+        {{ form|add_form_textfield_classes:'form-field w-100' }}
+        <p>
+            <button type="submit" class="btn btn-primary btn-big w-100" name="save" value="save">Save</button>
+        </p>
+    </form>
+{% endblock content %}

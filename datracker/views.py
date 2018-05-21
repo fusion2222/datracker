@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 from django.views.generic.edit import DeleteView, FormView, UpdateView
@@ -100,6 +101,11 @@ class IssueView(UpdateView):
         return super().post(*args, **kwargs)
 
 
-class IssueDeleteView(DeleteView):
+class IssueDeleteView(PermissionRequiredMixin, DeleteView):
     model = Issue
     template_name = 'issues/delete.html'
+    permission_required = 'datracker.delete_issue'
+
+    def get_success_url(self, *args, **kwargs):
+        page_kwargs = Page.objects.filter(pk=Pages.ISSUES).values('slug').first()
+        return reverse('page-detail', kwargs=page_kwargs)

@@ -115,6 +115,9 @@ class Issue(TimeStampedModel):
     def get_absolute_url(self):
         return reverse('issue-update', kwargs={'pk': self.pk})
 
+    def get_delete_url(self):
+        return reverse('issue-delete', kwargs={'pk': self.pk})
+
     def can_be_solved_by(self, employee):
         return not self.is_solved and employee.perms and self.request.user.has_perm('can_change_issue')
 
