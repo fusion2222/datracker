@@ -1,0 +1,32 @@
+.msg-wrapper{
+  padding: 0;
+  list-style-type: none;
+  margin: 0px;
+}
+
+.msg{
+  padding: $space;
+  font-size: 1rem;
+  line-height: $lineHeight;
+
+  &.info{
+    background-color: $statusInfo;
+    color: $statusInfoDark;
+  }
+
+  &.success{
+    background-color: $statusSuccess;
+    color: $statusSuccessDark;
+  }
+
+  &.warning{
+    background-color: $statusWarning;
+    color: $statusWarningDark;
+  }
+
+  &.error{
+    background-color: $statusError;
+    color: $statusErrorDark;
+  }
+
+}

@@ -15,6 +15,7 @@
     {% include 'includes/navbar.html' %}
     <div class="site-wrapper container">
         <h1>{% block title %}{% endblock title %}</h1>
+        {% include 'includes/messages.html' with messages=messages %}
         <div class="page-content">
             {% block content %}{% endblock content %}
         </div>
