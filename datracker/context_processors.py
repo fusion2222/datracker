@@ -1,3 +1,4 @@
+from django.urls import reverse
 from datracker.models import Page
 
 
@@ -8,6 +9,6 @@ def navbar_menu(request):
     output = [{'label': page.label, 'url': page.get_absolute_url()} for page in pages]
 
     if request.user.is_authenticated:
-        output.append({'label': 'Logout', 'url': 'admin/logout'})
+        output.append({'label': 'Logout', 'url': reverse('logout')})
 
     return {'navbar_links': output}

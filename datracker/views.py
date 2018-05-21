@@ -1,9 +1,23 @@
+from django.contrib.auth import logout
+
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 
 from datracker.enums import Pages
 from datracker.models import Page
 
+
+class LogoutView(RedirectView):
+    permanent = False
+    query_string = False
+    pattern_name = 'index'
+
+    def get_redirect_url(self, *args, **kwargs):
+
+        if self.request.user.is_authenticated:
+            logout(self.request)
+
+        return super().get_redirect_url(*args, **kwargs)
 
 class IndexView(RedirectView):
     permanent = False
