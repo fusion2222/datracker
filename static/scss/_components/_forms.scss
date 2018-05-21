@@ -1,0 +1,24 @@
+.form{
+  display: block;
+}
+
+
+.form-small{
+  width: 450px;
+}
+
+.form-login{
+  margin: 0px auto;
+}
+
+.form-field{
+  background-color: $white;
+  padding: $space;
+  box-sizing: border-box;
+  border: 0;
+  outline: 0;
+  font-size: 1rem;
+  &:active, &:focus{
+    background-color: $inputActive;
+  }
+}

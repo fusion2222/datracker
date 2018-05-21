@@ -10,5 +10,7 @@ def navbar_menu(request):
 
     if request.user.is_authenticated:
         output.append({'label': 'Logout', 'url': reverse('logout')})
+    else:
+        output.append({'label': 'Login', 'url': reverse('login')})
 
     return {'navbar_links': output}

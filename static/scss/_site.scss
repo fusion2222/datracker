@@ -14,7 +14,10 @@ body{
 .index-content--logo{
   max-width: 220px;
   max-height: 220px;
+}
 
+.w-100{
+  width: 100%;
 }
 
 @media (max-width: $breakpointMobile){
