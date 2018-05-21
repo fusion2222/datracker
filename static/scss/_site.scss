@@ -10,3 +10,22 @@ body{
 .site-wrapper{
   padding-top: 100px;
 }
+
+.index-content--logo{
+  max-width: 220px;
+  max-height: 220px;
+
+}
+
+@media (max-width: $breakpointMobile){
+  .index-content--logo{
+    display: block;
+    margin: 0px auto;
+  }
+}
+
+@media (min-width: $breakpointMobile + 1){
+  .index-content--logo{
+    float: right;
+  }
+}
