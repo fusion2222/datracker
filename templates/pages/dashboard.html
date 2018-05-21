@@ -1,0 +1,41 @@
+{% extends 'pages/base.html' %}
+
+{% block content %}
+    <p>{{ page.content }}</p>
+    <div class="single-dashboard">
+        <table>
+            <tr>
+                <th class="single-dashboard--label">Average solving time: </th>
+                <td class="single-dashboard--value">{{ avg_solving_duration }}</td>
+            </tr>
+            <tr>
+                <th class="single-dashboard--label">Shortest solving time: </th>
+                <td class="single-dashboard--value">{{ min_solving_duration }}</td>
+            </tr>
+            <tr>
+                <th class="single-dashboard--label">Longest solving time: </th>
+                <td class="single-dashboard--value">{{ max_solving_duration }}</td>
+            </tr>
+            <tr>
+                <th class="single-dashboard--label">The highest amount of issues assigned per single Person:</th>
+                <td class="single-dashboard--value">{{ max_issues_assigned }}</td>
+            </tr>
+            <tr>
+                <th class="single-dashboard--label">The lowest amount of issues assigned per single person:</th>
+                <td class="single-dashboard--value">{{ min_issues_assigned }}</td>
+            </tr>
+            <tr>
+                <th class="single-dashboard--label">Average amount of issues assigned per single person:</th>
+                <td class="single-dashboard--value">{{ min_issues_assigned }}</td>
+            </tr>
+            <tr>
+                <th class="single-dashboard--label">Total unresolved issues:</th>
+                <td class="single-dashboard--value">{{ total_unresolved_issues }}</td>
+            </tr>
+            <tr>
+                <th class="single-dashboard--label">Average amount of issues assigned per single person:</th>
+                <td class="single-dashboard--value">{{ total_resolved_issues }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock content %}
