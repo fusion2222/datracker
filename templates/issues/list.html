@@ -3,6 +3,9 @@
 {% block content %}
 
     <p>{{ page.content }}</p>
+    {% if perms.datracker.create_issue %}
+        <a href="{% url 'issue-create' %}" class="btn btn-primary btn-big pull-right">+ Create new Issue</a>
+    {% endif %}
     <table class="datatable">
         <thead>
             <tr>
