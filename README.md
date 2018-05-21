@@ -1,9 +1,22 @@
 # DaTracker
 
-DaTracker stands for Damn awesome Tracker. It is a small web application, which main purpose is to minimize effort
-for company managers during checking progress of task-solving by employees. At the same time, DaTracker displays
-simple statistics about the company and its workplaces. Users may create and solve issues and assigne them on each
-other. CEO and Managers have right to manage employees, issues and workspaces.
+![DaTracker](http://exile.sk/logo.svg)
+
+DaTracker stands for **D**amn **a**wesome **Tracker**. It is a small web application, which main purpose is to
+minimize effort for company managers during checking task-solving progress by employees. At the same time,
+DaTracker aggregates simple statistics about the company and its workplaces. So far managers can create issues
+for employees, assign them, track them, etc.
+
+## I still dont get the point of this project
+
+How many times you mean by-the-way some people from the business? I do often. Sometimes they are not aware how
+effective can work be  automated. If this project will be publicly running on server, it can be showcase of
+such process automatization (sending notification to supervisor, generate pdf documents, etc..), so people can
+see in realtime. Right on mobile phone. And if they like it, sounds like potential clients are coming!
+
+## Before you continue
+The project is still under development, and will be actively developed. There is still a lot work to do, so any
+contributors will be welcome.
 
 ## How to run a project
 
@@ -22,25 +35,39 @@ system-wide package installation.
 - NPM package manager for NodeJS should be installed along NodeJS installation. Check if you have installed npm
 by typing `npm --version` in terminal. If command is not recognized,
 [install NPM package manager](https://www.npmjs.com/get-npm)
-- If you have not opened Terminal, navigate into folder where you would like to have DaTracker installed.
-- run `git clone git@github.com:fusion2222/datracker.git` from your Terminal.
+- If you have not opened Terminal, open it and navigate into folder where you would like to have DaTracker installed.
+- run `git clone git@github.com:fusion2222/datracker.git` from your Terminal. This command clones clone on your computer.
 - Navigate to newly created DaTracker folder using your Terminal.
 - [Create virtualenv](https://virtualenv.pypa.io/en/stable/userguide/) for DaTracker in your system.
 - [Activate virtualenv](https://virtualenv.pypa.io/en/stable/userguide/#activate-script) you recently created.
 - [Create Database SQLite](https://www.sqlite.org/cli.html) file in your datracker root directory.
 Name it `db.sqlite3`.
-- run `python manage.py makemigrations`
 - run `pip install -r requirements.txt` in your Terminal. If you have installed pip3 instead, run the
 same command for pip3
+- run `python manage.py makemigrations`
+- run `python manage.py create_initial_data` - This will also create your test data
 - rum `npm install`
 - run `npm link gulp`
 - run `gulp sass`
 - run `gulp js`
 - run `python manage.py collectstatic`
 
+## Important notice
+
+Currently this biggest flaws of DaTracker is secure handling of vendor-packages, frontnend as well as
+Messages module not working.
+
 ## Contribution guide
 
-Project uses strictly SCSS syntax as the only CSS syntactical preprocessor.
+Jesus once said wise thing - Those who will try to push any code into this repository, without reading
+following rules will be damned. So better check the rules:
+- Project uses strictly SCSS syntax as the only CSS syntactical preprocessor. We do not mix Sass,
+Less and SCSS no matter what. (only exceptions are vendor packages)
+- Consistency - If there is some naming convention widely used in project, use it no matter how obscure
+it looks. This applies also for graphical and frontend stuff.
+- Keep as low dependencies as possible - Dependencies are good.. but only if they save you a lot of
+tedious, difficult or repetitive work.
+- Any ideas are welcome and feel free to discuss.
 
 ### Compiling Javascript and SCSS to CSS
 
