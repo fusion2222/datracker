@@ -225,6 +225,7 @@ class Command(BaseCommand):
             employee['password'] = common_password
             new_employee = Employee.objects.create_user(**employee)
             self.employee_user_group.user_set.add(new_employee)
+            new_employee.save()
             self.employees.append(new_employee)
             self.stdout.write(self.style.SUCCESS(
                 'Employee #{} has been succesfully created. Login: {} Password: {}'.format(

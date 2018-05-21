@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import DeleteView, FormView, UpdateView
 
 from django.http import Http404, HttpResponseRedirect
 
@@ -98,3 +98,8 @@ class IssueView(UpdateView):
             messages.add_message(self.request, messages.WARNING, 'Issue resolution is not yet working. Coming on soon.')
 
         return super().post(*args, **kwargs)
+
+
+class IssueDeleteView(DeleteView):
+    model = Issue
+    template_name = 'issues/delete.html'
