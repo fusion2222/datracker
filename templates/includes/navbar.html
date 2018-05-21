@@ -4,7 +4,7 @@
 <div class="navbar js-navbar">
     <div class="container">
         {% get_singleton 'datracker' 'SiteSettings' as site_settings %}
-        <a href="#" class="navbar--logo">
+        <a href="{% url 'index' %}" class="navbar--logo">
             {% include 'includes/svg_logo.html' with is_bright=True additional_class='navbar--logo--image' %}
             <span class="navbar--logo--site-name">{{ site_settings.site_name }}</span>
             <span class="navbar--logo--site-slogan">{{ site_settings.site_slogan }}</span>
