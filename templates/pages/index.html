@@ -4,6 +4,8 @@
     <div class="index-content clearfix">
         {% include 'includes/svg_logo.html' with additional_class="index-content--logo" %}
         <p>{{ page.content }}</p>
-        <a href="{% url 'login' %}" class="btn btn-primary btn-big">Login</a>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-big">Login</a>
+        {% endif %}
     </div>
 {% endblock content %}
