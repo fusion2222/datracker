@@ -1,4 +1,32 @@
-from django.template.response import TemplateResponse
+from django.views.generic import DetailView
+from django.views.generic.base import RedirectView
 
-def index(request):
-    return TemplateResponse(request, 'base.html', {"title": "test"})
+from datracker.enums import Pages
+from datracker.models import Page
+
+
+class IndexView(RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'page-detail'
+
+    def get_redirect_url(self, *args, **kwargs):
+        page_pk = Pages.DASHBOARD if self.request.user else Pages.ABOUT
+        kwargs.update(
+            Page.objects.filter(pk=page_pk).values('slug').first()
+        )
+
+        return super().get_redirect_url(*args, **kwargs)
+
+
+class PageView(DetailView):
+    model = Page
+    template_name = 'pages/base.html'
+
+    def get_object(self, *args, **kwargs):
+        object = super().get_object(*args, **kwargs)
+
+        if object.pk == Pages.ABOUT:
+            self.template_name = 'pages/index.html'
+
+        return object

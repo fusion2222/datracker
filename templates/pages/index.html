@@ -1,0 +1,11 @@
+{% extends 'pages/base.html' %}
+
+{% block content %}
+    <div class="index-content clearfix">
+        {% include 'includes/svg_logo.html' with additional_class="index-content--logo" %}
+        <p>
+            {{ page.content }}
+        </p>
+        <a href="#" class="btn btn-primary btn-big">Login</a>
+    </div>
+{% endblock content %}
