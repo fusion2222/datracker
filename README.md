@@ -7,13 +7,6 @@ minimize effort for company managers during checking task-solving progress by em
 DaTracker aggregates simple statistics about the company and its workplaces. So far managers can create issues
 for employees, assign them, track them, etc.
 
-## I still dont get the point of this project
-
-How many times you mean by-the-way some people from the business? I do often. Sometimes they are not aware how
-effective can work be  automated. If this project will be publicly running on server, it can be showcase of
-such process automatization (sending notification to supervisor, generate pdf documents, etc..), so people can
-see in realtime. Right on mobile phone. And if they like it, sounds like potential clients are coming!
-
 ## Before you continue
 The project is still under development, and will be actively developed. There is still a lot work to do, so any
 contributors will be welcome.
