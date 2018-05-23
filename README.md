@@ -2,7 +2,7 @@
 
 <img src="http://exile.sk/logo.svg" width="110px">
 
-DaTracker stands for **D**amn **a**wesome **Tracker**. It is a small web application, which main purpose is to
+DaTracker stands for **D**amn **a**wesome **Tracker**. It is a small web application. It's main purpose is to
 minimize effort for company managers during checking task-solving progress by employees. At the same time,
 DaTracker aggregates simple statistics about the company and its workplaces. So far managers can create issues
 for employees, assign them, track them, etc.
@@ -29,7 +29,7 @@ system-wide package installation.
 by typing `npm --version` in terminal. If command is not recognized,
 [install NPM package manager](https://www.npmjs.com/get-npm)
 
-## How to run a project
+## How to initialize
 
 In order to install DaTracker you must finish following steps:
 
@@ -42,6 +42,8 @@ In order to install DaTracker you must finish following steps:
 Name it `db.sqlite3`.
 - run `pip install -r requirements.txt` in your Terminal. If you have installed pip3 instead, run the
 same command for pip3
+- Copy `env.json.example` into project root directory and name it `env.json`. Then set your project
+variables in this file, especially the [secret key](https://docs.djangoproject.com/en/2.0/ref/settings/#secret-key).
 - Run `python manage.py makemigrations`
 - Run `python manage.py create_initial_data` - This will also create your test data
 - Rum `npm install`
@@ -49,18 +51,16 @@ same command for pip3
 - Run `gulp sass`
 - Run `gulp js`
 - Run `python manage.py collectstatic`
-- Copy `env.json.example` into project root directory and name it `env.json`. Then set your project
-variables in this file.
 ## How to run
 
 Okay you have project succesfuly installed. Now follow these steps:
 
 - Activate your `virtualenv` related to datracker project and navigate into project root folder.
-- Run `python manage.py runserver localhost:8000` (If you have installed your python
-under `python3`, run the same command).
+- [Start local development server](https://docs.djangoproject.com/en/2.0/intro/tutorial02/#start-the-development-server).
 - Type localhost:8000 as web address in your browser. Datracker should load.
 - If you ran `python manage.py create_initial_data`, administrator Employee has been already
-created. Default username is `admin` and password is `password`.
+created. Default username is `admin` and password is `password`. Otherwise use Django
+[createsuperuser command](https://docs.djangoproject.com/en/2.0/intro/tutorial02/#creating-an-admin-user).
 
 ## Important notice
 
