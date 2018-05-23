@@ -37,14 +37,15 @@ by typing `npm --version` in terminal. If command is not recognized,
 Name it `db.sqlite3`.
 - run `pip install -r requirements.txt` in your Terminal. If you have installed pip3 instead, run the
 same command for pip3
-- run `python manage.py makemigrations`
-- run `python manage.py create_initial_data` - This will also create your test data
-- rum `npm install`
-- run `npm link gulp`
-- run `gulp sass`
-- run `gulp js`
-- run `python manage.py collectstatic`
-
+- Run `python manage.py makemigrations`
+- Run `python manage.py create_initial_data` - This will also create your test data
+- Rum `npm install`
+- Run `npm link gulp`
+- Run `gulp sass`
+- Run `gulp js`
+- Run `python manage.py collectstatic`
+- Copy `env.json.example` into project root directory and name it `env.json`. Then set your project
+variables in this file.
 ## How to run
 
 Okay you have project succesfuly installed. Now follow these steps:
