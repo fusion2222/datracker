@@ -1,12 +1,11 @@
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
-
-from django.http import Http404, HttpResponseRedirect
 
 from datracker.forms import LoginForm
 from datracker.enums import Pages
@@ -124,6 +123,7 @@ class IssueDeleteView(PermissionRequiredMixin, DeleteView):
     def get_success_url(self, *args, **kwargs):
         page_kwargs = Page.objects.filter(pk=Pages.ISSUES).values('slug').first()
         return reverse('page-detail', kwargs=page_kwargs)
+
 
 class IssueCreateView(PermissionRequiredMixin, CreateView):
     model = Issue
