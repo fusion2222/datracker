@@ -1,6 +1,3 @@
-from datetime import timedelta
-
-from django.db.models import Avg, Count, F, IntegerField, Max, Min, ExpressionWrapper
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib import messages
@@ -74,72 +71,6 @@ class PageView(DetailView):
 
         return page
 
-    def _get_dashboard_issue_aggregates(self, output):
-        """
-        Appends Issue aggregates for dashboard to output.
-        """
-        issues = Issue.objects.exclude(solved__isnull=True).annotate(
-            solving_time_duration=ExpressionWrapper(
-                # We cant use DurationField here! SQLlite can not run Avg on it.
-                # Casting duration into IntegerField converts our data to microseconds.
-                F('solved') - F('created'), output_field=IntegerField()
-            )
-        )
-
-        output.update(
-            issues.aggregate(avg_solving_duration=Avg('solving_time_duration'))
-        )
-
-        output.update(
-            issues.aggregate(max_solving_duration=Max('solving_time_duration'))
-        )
-
-        output.update(
-            issues.aggregate(min_solving_duration=Min('solving_time_duration'))
-        )
-
-        for key, value in output.items():
-            # IntegerField from aggregation returned microseconds. They are converted here
-            # into seconds, and round them so we dont have output like 2 Days 12:14:063423...
-            duration = timedelta(seconds=round(value / 1000000))
-            output[key] = str(duration)
-
-    def _get_dashboard_employee_aggregates(self, output):
-        """
-        Appends Employee aggregates for dashboard to output.
-        """
-        employees = get_user_model().objects.annotate(solved_issues_count=Count('issue'))
-
-        output.update(
-            employees.aggregate(max_issues_assigned=Max('solved_issues_count'))
-        )
-
-        output.update(
-            employees.aggregate(min_issues_assigned=Min('solved_issues_count'))
-        )
-
-        output.update(
-            employees.aggregate(avg_issues_assigned=Avg('solved_issues_count'))
-        )
-
-    def get_dashboard_stats(self):
-        """
-        This method returns all aggregate data used for dashboard.
-        :return: dictionary
-        """
-        output = {}
-
-        self._get_dashboard_issue_aggregates(output)
-        self._get_dashboard_employee_aggregates(output)
-
-        output.update(
-            {
-                'total_unresolved_issues': Issue.objects.filter(solved__isnull=True).count(),
-                'total_resolved_issues': Issue.objects.filter(solved__isnull=False).count(),
-            }
-        )
-        return output
-
     def get_context_data(self, *args, **kwargs):
         """
         If any page needs any special content or template,
@@ -147,16 +78,11 @@ class PageView(DetailView):
         """
         context = super().get_context_data(*args, **kwargs)
 
-        if self.object.pk == Pages.ABOUT:
-            self.template_name = 'pages/index.html'
+        self.template_name = self.object.get_specific_template_name(
+            default=self.template_name
+        )
 
-        if self.object.pk == Pages.DASHBOARD:
-            self.template_name = 'pages/dashboard.html'
-            context.update(self.get_dashboard_stats())
-
-        elif self.object.pk == Pages.ISSUES:
-            self.template_name = 'issues/list.html'
-            context['issues'] = Issue.objects.all().order_by('-created')
+        context.update(self.object.get_additional_context())
 
         return context
 

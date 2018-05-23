@@ -1,8 +1,12 @@
+from datetime import timedelta
+
 from djsingleton.models import SingletonModel
 from django_extensions.db.models import TimeStampedModel
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User, AbstractUser
 from django.db import models
+from django.db.models import Avg, Count, F, IntegerField, Max, Min, ExpressionWrapper
 from django.urls import reverse
 
 from datracker.enums import Pages
@@ -67,6 +71,104 @@ class Page(TimeStampedModel):
         Beware, Login and Logout subpages do not count here.
         """
         return self.pk not in self.public_pages
+
+    _specific_templates = {
+        Pages.ABOUT: 'pages/index.html',
+        Pages.DASHBOARD: 'pages/dashboard.html',
+        Pages.ISSUES: 'issues/list.html'
+    }
+
+    def get_specific_template_name(self, default):
+        return self._specific_templates.get(self.pk, default)
+
+    def _get_dashboard_page_issue_data(self):
+        """
+        Appends Issue aggregates for dashboard to output.
+        """
+        output = {}
+
+        issues = Issue.objects.exclude(solved__isnull=True).annotate(
+            solving_time_duration=ExpressionWrapper(
+                # We cant use DurationField here! SQLlite can not run Avg on it.
+                # Casting duration into IntegerField converts our data to microseconds.
+                F('solved') - F('created'), output_field=IntegerField()
+            )
+        )
+
+        output.update(
+            issues.aggregate(avg_solving_duration=Avg('solving_time_duration'))
+        )
+
+        output.update(
+            issues.aggregate(max_solving_duration=Max('solving_time_duration'))
+        )
+
+        output.update(
+            issues.aggregate(min_solving_duration=Min('solving_time_duration'))
+        )
+
+        for key, value in output.items():
+            # IntegerField from aggregation returned microseconds. They are converted here
+            # into seconds, and round them so we dont have output like 2 Days 12:14:063423...
+            duration = timedelta(seconds=round(value / 1000000))
+            output[key] = str(duration)
+
+        return output
+
+    def _get_dashboard_page_employee_data(self):
+        """
+        Appends Employee aggregates for dashboard to output.
+        """
+        output = {}
+
+        employees = get_user_model().objects.annotate(solved_issues_count=Count('issue'))
+
+        output.update(
+            employees.aggregate(max_issues_assigned=Max('solved_issues_count'))
+        )
+
+        output.update(
+            employees.aggregate(min_issues_assigned=Min('solved_issues_count'))
+        )
+
+        output.update(
+            employees.aggregate(avg_issues_assigned=Avg('solved_issues_count'))
+        )
+
+        return output
+
+    def get_dashboard_stats(self):
+        """
+        This method returns all aggregate data used for dashboard.
+        :return: dictionary
+        """
+        output = {}
+
+        output.update(
+            self._get_dashboard_page_issue_data()
+        )
+        output.update(
+            self._get_dashboard_page_employee_data()
+        )
+        output.update(
+            {
+                'total_unresolved_issues': Issue.objects.filter(solved__isnull=True).count(),
+                'total_resolved_issues': Issue.objects.filter(solved__isnull=False).count(),
+            }
+        )
+        return output
+
+    def get_additional_context(self):
+
+        if self.pk == Pages.DASHBOARD:
+            return self.get_dashboard_stats()
+
+        elif self.pk == Pages.ISSUES:
+            return {
+                'issues': Issue.objects.all().order_by('-created')
+            }
+        else:
+            return {}
 
     def can_be_seen_by(self, user):
         return not self.is_private or user.is_authenticated and self.is_private
