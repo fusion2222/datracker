@@ -1,6 +1,6 @@
 # DaTracker
 
-![DaTracker](http://exile.sk/logo.svg)
+<img src="http://exile.sk/logo.svg" width="110px">
 
 DaTracker stands for **D**amn **a**wesome **Tracker**. It is a small web application, which main purpose is to
 minimize effort for company managers during checking task-solving progress by employees. At the same time,
