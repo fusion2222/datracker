@@ -11,9 +11,9 @@ for employees, assign them, track them, etc.
 The project is still under development, and will be actively developed. There is still a lot work to do, so any
 contributors will be welcome.
 
-## How to run a project
+## Prerequisites
 
-In order to install DaTracker you must finish following steps:
+There are prerequisites in order to run this project locally:
 
 - [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) on your machine.
 - [Install SASS](https://sass-lang.com/install) on your machine.
@@ -28,6 +28,11 @@ system-wide package installation.
 - NPM package manager for NodeJS should be installed along NodeJS installation. Check if you have installed npm
 by typing `npm --version` in terminal. If command is not recognized,
 [install NPM package manager](https://www.npmjs.com/get-npm)
+
+## How to run a project
+
+In order to install DaTracker you must finish following steps:
+
 - If you have not opened Terminal, open it and navigate into folder where you would like to have DaTracker installed.
 - run `git clone git@github.com:fusion2222/datracker.git` from your Terminal. This command clones clone on your computer.
 - Navigate to newly created DaTracker folder using your Terminal.
