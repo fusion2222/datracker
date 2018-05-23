@@ -45,10 +45,21 @@ same command for pip3
 - run `gulp js`
 - run `python manage.py collectstatic`
 
+## How to run
+
+Okay you have project succesfuly installed. Now follow these steps:
+
+- Activate your `virtualenv` related to datracker project and navigate into project root folder.
+- Run `python manage.py runserver localhost:8000` (If you have installed your python
+under `python3`, run the same command).
+- Type localhost:8000 as web address in your browser. Datracker should load.
+- If you ran `python manage.py create_initial_data`, administrator Employee has been already
+created. Default username is `admin` and password is `password`.
+
 ## Important notice
 
 Currently this biggest flaws of DaTracker is secure handling of vendor-packages, frontnend as well as
-Messages module not working.
+Messages module not working. This will be fixed soon.
 
 ## Contribution guide
 
