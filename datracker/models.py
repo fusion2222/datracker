@@ -28,6 +28,8 @@ class Employee(AbstractUser):
         # We need to override inherited User verbose_name.
         verbose_name = 'Employee'
 
+    def __str__(self):
+        return self.name
 
 class SiteSettings(SingletonModel):
     # TODO: performance can be optimized using caching.
@@ -196,7 +198,7 @@ class IssueCategory(TimeStampedModel):
         verbose_name_plural = "Issue Categories"
 
     def __str__(self):
-        return '<IssueCategory #{} {}>'.format(self.pk, self.name)
+        return '{}'.format(self.name)
 
 
 class Issue(TimeStampedModel):
