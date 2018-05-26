@@ -19,6 +19,10 @@ body{
   max-height: 220px;
 }
 
+textarea{
+  font-family: $fontMain;
+}
+
 @media (max-width: $breakpointMobile){
   .index-content--logo{
     display: block;
