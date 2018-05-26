@@ -9,7 +9,7 @@ $navbarBreakpoint: 950px; /* Will depend on size of links */
 
 .navbar--logo{
   width: 230px;
-  height: 60px;
+  height: 45px;
   position: relative;
   display: block;
   font-size: 0;
@@ -26,29 +26,29 @@ $navbarBreakpoint: 950px; /* Will depend on size of links */
 }
 
 .navbar--logo--image{
-  max-height: 53px;
-  max-width: 53px;
+  max-height: 45px;
+  max-width: 45px;
 }
 
 .navbar--logo--site-name{
-  font-size: 30px;
+  font-size: 24px;
   line-height: 1;
   font-weight: bold;
   display: block;
   color: $blue;
   position: absolute;
   top: 5px;
-  left: 60px;
+  left: 53px;
 }
 
 .navbar--logo--site-slogan{
-  font-size: 17px;
+  font-size: 14px;
   line-height: 1;
   display: block;
   color: $bright;
   position: absolute;
-  top: 37px;
-  left: 63px;
+  top: 30px;
+  left: 55px;
 }
 
 .navbar--menu{
@@ -62,6 +62,7 @@ $navbarBreakpoint: 950px; /* Will depend on size of links */
   box-sizing: border-box;
   text-decoration: none;
   color: $white;
+  font-size: 16px;
 }
 
 @media (min-width: $navbarBreakpoint + 1){
@@ -85,7 +86,7 @@ $navbarBreakpoint: 950px; /* Will depend on size of links */
   .navbar--menu--link{
     display: block;
     height: 100%;
-    padding-top: 25px;
+    padding-top: 23px;
     &:hover{
       color: $blueHighlight;
     }
