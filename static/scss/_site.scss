@@ -1,6 +1,9 @@
+html{
+    font-size: $fontSize;
+}
+
 body{
   font-family: $fontMain;
-  font-size: $fontSize;
   line-height: $lineHeight;
   padding: 0px;
   margin: 0px;
