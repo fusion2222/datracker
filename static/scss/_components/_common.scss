@@ -31,3 +31,35 @@
   clear: both;
   height: 0;
 }
+
+.no-padding-top{
+  padding-top: 0;
+}
+
+.no-padding-left{
+  padding-left: 0;
+}
+
+.no-padding-bottom{
+  padding-bottom: 0;
+}
+
+.no-padding-right{
+  padding-right: 0;
+}
+
+.row{
+  margin: 0px (-$space);
+}
+
+.h1{
+  font-size: 3rem;
+}
+
+.w-50{
+  width: 49.5%;
+}
+
+.w-100{
+  width: 100%;
+}

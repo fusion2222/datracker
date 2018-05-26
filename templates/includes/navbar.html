@@ -2,18 +2,31 @@
 {% load djsingleton %}
 
 <div class="navbar js-navbar">
-    <div class="container">
+    <div class="container navbar--content no-padding-bottom no-padding-top clearfix">
         {% get_singleton 'datracker' 'SiteSettings' as site_settings %}
         <a href="{% url 'index' %}" class="navbar--logo">
             {% include 'includes/svg_logo.html' with is_bright=True additional_class='navbar--logo--image' %}
             <span class="navbar--logo--site-name">{{ site_settings.site_name }}</span>
             <span class="navbar--logo--site-slogan">{{ site_settings.site_slogan }}</span>
         </a>
-        <ul class="navbar--menu">
-            {% for link in navbar_links %}
-                <li class="navbar--menu--item {% if link.url == request.path %}active{% endif %}"><a href="{{ link.url }}" class="navbar--menu--link">{{ link.label }}</a></li>
-            {% endfor %}
-        </ul>
-        <button type="button" class="navbar--menu-toggle js-navbar--toggle"></button>
+        <div class="navbar--menu-wrapper">
+            <button type="button" class="navbar--menu-toggle js-navbar--toggle"></button>
+            {% if user.is_authenticated %}
+                <div class="navbar--auth-info">
+                    <div class="navbar--auth-info--menu-separator"></div>
+                    <a href="#" class="navbar--auth-info--user-avatar">
+                        <img src="http://via.placeholder.com/45x45" class="navbar--auth-info--user-avatar--image">
+                    </a>
+                    <span class="navbar--auth-info--label">Logged as:</span>
+                    <a href="#" class="navbar--auth-info--user-name">{{ user.name|truncatechars:14 }}</a>
+                </div>
+            {% endif %}
+            <ul class="navbar--menu row">
+                {% for link in navbar_links %}
+                    <li class="navbar--menu--item {% if link.url == request.path %}active{% endif %}"><a href="{{ link.url }}" class="navbar--menu--link">{{ link.label }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
     </div>
 </div>
