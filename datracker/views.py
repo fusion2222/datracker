@@ -89,7 +89,7 @@ class PageView(DetailView):
 class IssueView(UpdateView):
     model = Issue
     template_name = 'issues/update.html'
-    fields = ['name', 'description', 'assignee', 'category']
+    fields = ['name', 'solved', 'description', 'assignee', 'category']
 
     def get_form(self, *args, **kwargs):
         """

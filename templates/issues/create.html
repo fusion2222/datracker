@@ -3,11 +3,28 @@
 {% block title %}Create a new Issue{% endblock %}
 
 {% block content %}
-    <form action="{{ issue.get_absolute_url }}" method="POST">
+    <form action="{{ issue.get_absolute_url }}" method="POST" class="form row">
         {% csrf_token %}
-        {{ form|add_form_textfield_classes:'form-field w-100' }}
-        <p>
-           <button type="submit" class="btn btn-primary btn-big w-100" name="save" value="save">Save</button>
-        </p>
+
+        <div class="form-group w-100">
+            {{ form.name.label }}
+            {{ form.name|add_field_textfield_classes:'form-field w-100' }}
+        </div>
+        <div class="form-group w-50">
+            {{ form.category.label }}
+            {{ form.category|add_field_textfield_classes:'form-field w-100' }}
+        </div>
+        <div class="form-group w-50">
+            {{ form.assignee.label }}
+            {{ form.assignee|add_field_textfield_classes:'form-field w-100' }}
+        </div>
+        <div class="form-group w-100">
+            {{ form.description.label }}
+            {{ form.description|add_field_textfield_classes:'form-field w-100' }}
+        </div>
+
+        <div class="form-group w-100">
+           <button type="submit" class="btn btn-primary btn-big w-100" name="save" value="save">Create Issue</button>
+        </div>
     </form>
 {% endblock content %}

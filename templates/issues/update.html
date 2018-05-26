@@ -7,16 +7,40 @@
     <span><b>Last modified:</b> {{ issue.modified|date:"G:i j.n.Y" }}</span> |
     <span><b>Issue created at:</b> {{ issue.created|date:"G:i j.n.Y" }}</span> |
     <span><b>Issue Solved at:</b> {{ issue.solved|date:"G:i j.n.Y" }}</span>
-    <form action="{{ issue.get_absolute_url }}" method="POST">
+    <form action="{{ issue.get_absolute_url }}" method="POST" class="form row">
         {% csrf_token %}
-        {{ form|add_form_textfield_classes:'form-field w-100' }}
-        <p>
+
+        <div class="form-group w-50">
+            {{ form.name.label }}
+            {{ form.name|add_field_textfield_classes:'form-field w-100' }}
+        </div>
+        <div class="form-group w-50">
+            {{ form.solved.label }}
+            {{ form.solved|add_field_textfield_classes:'form-field w-100' }}
+        </div>
+        <div class="form-group w-50">
+            {{ form.category.label }}
+            {{ form.category|add_field_textfield_classes:'form-field w-100' }}
+        </div>
+        <div class="form-group w-50">
+            {{ form.assignee.label }}
+            {{ form.assignee|add_field_textfield_classes:'form-field w-100' }}
+        </div>
+        <div class="form-group w-100">
+            {{ form.description.label }}
+            {{ form.description|add_field_textfield_classes:'form-field w-100' }}
+        </div>
             {% if perms.datracker.close_issue %}
-                <button type="submit" class="btn btn-primary btn-big w-50" name="save" value="save">Save</button>
-                <button type="submit" class="btn btn-success btn-big w-50" name="resolve" value="resolve">Resolve now</button>
+                <div class="form-group w-50">
+                    <button type="submit" class="btn btn-primary btn-big w-100" name="save" value="save">Save</button>
+                </div>
+                <div class="form-group w-50">
+                    <button type="submit" class="btn btn-success btn-big w-100" name="resolve" value="resolve">Resolve now</button>
+                </div>
             {% else %}
-                <button type="submit" class="btn btn-primary btn-big w-100" name="save" value="save">Save</button>
+                <div class="form-group w-100">
+                    <button type="submit" class="btn btn-primary btn-big w-100" name="save" value="save">Save Issue</button>
+                </div>
             {% endif %}
-        </p>
     </form>
 {% endblock content %}

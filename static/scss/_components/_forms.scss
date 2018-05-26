@@ -1,10 +1,18 @@
 .form{
   display: block;
   padding: $space / 2;
+  box-sizing: border-box;
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 }
 
 .form-group{
   padding: $space / 2;
+  box-sizing: border-box;
+  float: left;
 }
 
 .form-small{

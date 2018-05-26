@@ -21,6 +21,7 @@ body{
 
 textarea{
   font-family: $fontMain;
+  resize: vertical;
 }
 
 @media (max-width: $breakpointMobile){
