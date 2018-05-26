@@ -170,7 +170,7 @@ $navbarBreakpointAuthMenu: 620px; /* Will depend on size of links */
     height: 100%;
 
     padding-top: 18px;
-    &:hover{
+    &:hover, &:active, &:focus{
       color: $blueHighlight;
     }
   }
