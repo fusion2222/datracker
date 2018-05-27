@@ -16,6 +16,16 @@ lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus 
 common_password = 'password'
 
 
+class ContentTypes:
+    ISSUE = ContentType.objects.get_for_model(Issue)
+
+
+class AuthGroupNames:
+    EMPLOYEES = 'Employees'
+    MANAGERS = 'Managers'
+    CEOS = 'CEOs'
+
+
 class Command(BaseCommand):
     help = 'This command wipes DB and creates initial data again.' \
            'This command is Dangerous, may cause a data-loss. Use with care.'
@@ -172,7 +182,17 @@ class Command(BaseCommand):
 
     total_issues = 66
 
-    employee_auth_group_permissions_data = ["close_issue"]
+    data_auth_groups = {
+        AuthGroupNames.EMPLOYEES: [{
+            ContentTypes.ISSUE: ["close_issue"],
+        }],
+        AuthGroupNames.MANAGERS: [{
+            ContentTypes.ISSUE: ["close_issue", "update_solved_time"]
+        }],
+        AuthGroupNames.CEOS: [{
+            ContentTypes.ISSUE: ["close_issue", "update_solved_time"]
+        }]
+    }
 
     def _create_pages(self):
 
@@ -204,28 +224,34 @@ class Command(BaseCommand):
 
         Group.objects.all().delete()
 
-        self.employee_user_group = Group.objects.create(name='Employees')
+        for group_name, group_permissions_list in self.data_auth_groups.items():
+            group = Group.objects.create(name=group_name)
 
-        ct = ContentType.objects.get_for_model(Issue)
-        permission = Permission.objects.get(codename='close_issue', content_type=ct)
+            for group_permissions in group_permissions_list:
 
-        self.employee_user_group.permissions.add(permission)
+                for permissions_content_type, permission_list in group_permissions.items():
 
-        self.stdout.write(self.style.SUCCESS(
-            'User group {} has been succesfully created.'.format(
-                self.employee_user_group.name,
-            )
-        ))
+                    for permission_name in permission_list:
+
+                        perm = Permission.objects.get(codename=permission_name, content_type=permissions_content_type)
+                        group.permissions.add(perm)
+
+                self.stdout.write(self.style.SUCCESS(
+                    'User group {} has been succesfully created.'.format(
+                        group.name,
+                    )
+                ))
 
     def _create_employees(self):
         # Employees
         get_user_model().objects.all().delete()
+        employee_user_group = Group.objects.get(name=AuthGroupNames.EMPLOYEES)
 
         for employee in self.data_employees:
             employee['is_staff'] = True
             employee['password'] = common_password
             new_employee = get_user_model().objects.create_user(**employee)
-            self.employee_user_group.user_set.add(new_employee)
+            employee_user_group.user_set.add(new_employee)
             new_employee.save()
             self.employees.append(new_employee)
             self.stdout.write(self.style.SUCCESS(
@@ -238,6 +264,8 @@ class Command(BaseCommand):
 
     def _create_superuser(self):
         # Additionally lets create a superuser
+        ceos_user_group = Group.objects.get(name=AuthGroupNames.CEOS)
+
         new_employee = get_user_model().objects.create_superuser(**{
             'first_name': 'Marshall',
             'last_name': 'Hammond',
@@ -245,6 +273,9 @@ class Command(BaseCommand):
             'email': 'admin@admin.gamail',
             'password': common_password,
         })
+
+        ceos_user_group.user_set.add(new_employee)
+
         self.employees.append(new_employee)
         self.stdout.write(self.style.SUCCESS(
             'Additional superuser Employee #{} has been created! Login: {} Password: {}'.format(

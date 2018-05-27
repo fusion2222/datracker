@@ -241,5 +241,6 @@ class Issue(TimeStampedModel):
 
     class Meta:
         permissions = (
+            ('update_solved_time', 'Can update solved time if issues upon creation or update'),
             ('close_issue', 'Can close unfinished issue assigned to self'),
         )
