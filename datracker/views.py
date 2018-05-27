@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -9,7 +9,7 @@ from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateVi
 
 from datracker.forms import LoginForm
 from datracker.enums import Pages
-from datracker.models import Issue, Page
+from datracker.models import Issue, Page, Employee
 
 
 class LoginView(FormView):
@@ -28,7 +28,7 @@ class LoginView(FormView):
         return kwargs
 
 
-class LogoutView(RedirectView):
+class LogoutView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = False
     pattern_name = 'index'
@@ -86,7 +86,7 @@ class PageView(DetailView):
         return context
 
 
-class IssueView(UpdateView):
+class IssueView(LoginRequiredMixin, UpdateView):
     model = Issue
     template_name = 'issues/update.html'
     fields = ['name', 'solved', 'description', 'assignee', 'category']
@@ -134,3 +134,19 @@ class IssueCreateView(PermissionRequiredMixin, CreateView):
     def get_success_url(self, *args, **kwargs):
         page_kwargs = Page.objects.filter(pk=Pages.ISSUES).values('slug').first()
         return reverse('page-detail', kwargs=page_kwargs)
+
+
+class EmployeeView(LoginRequiredMixin, UpdateView):
+    model = Employee
+    template_name = 'employees/profile.html'
+    fields = ['first_name', 'last_name', 'avatar', 'email', 'password']
+
+
+class EmployeeCreateView(LoginRequiredMixin, CreateView):
+    model = Employee
+    xyz = 321
+
+
+class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
+    model = Employee
+    xyz = 321

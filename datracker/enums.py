@@ -40,3 +40,15 @@ class IssueCategories(ChoiceEnum):
         (RELIGIOUS, 'Religious'),
         (POLITICAL, 'Political'),
     )
+
+
+class AuthGroupNames(ChoiceEnum):
+    EMPLOYEES = 'Employees'
+    MANAGERS = 'Managers'
+    CEOS = 'CEOs'
+
+    choices = (
+        (EMPLOYEES, 'Employee'),
+        (MANAGERS, 'Manager'),
+        (CEOS, 'CEO'),
+    )

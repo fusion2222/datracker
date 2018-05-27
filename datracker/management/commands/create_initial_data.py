@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 
 from datracker.models import Page, Issue, IssueCategory
-from datracker.enums import IssueCategories, Pages
+from datracker.enums import AuthGroupNames, IssueCategories, Pages
 
 
 lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia bibendum quam id cursus. Mauris vehicula ante vel velit gravida, vel porta tortor ornare."
@@ -18,12 +18,6 @@ common_password = 'password'
 
 class ContentTypes:
     ISSUE = ContentType.objects.get_for_model(Issue)
-
-
-class AuthGroupNames:
-    EMPLOYEES = 'Employees'
-    MANAGERS = 'Managers'
-    CEOS = 'CEOs'
 
 
 class Command(BaseCommand):

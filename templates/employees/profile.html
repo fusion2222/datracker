@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load filters %}
+
+{% block title %}Employee {{ employee.name }}{% endblock %}
+{% block meta_title %}{{ employee.name }}{% endblock %}
+{% block meta_description %}Review details of employee {{ employee.name }}.{% endblock %}
+{% block content %}
+    {% with can_update=True %} {#  perms.datracker.can_update #}
+
+        <form class="employee-profile form row">
+            <div class="employee-profile--content">
+                <div class="form-group employee-profile--avatar">
+                    <div class="employee-profile--avatar-wrapper js-avatar-uploader">
+                        {% if can_update %}
+                            <div class="employee-profile--avatar-upload-disclaimer">Upload an image</div>
+                            {{ form.avatar|add_field_textfield_classes:'employee-profile--avatar-file-field js-avatar-uploader--file-field' }}
+                        {% endif %}
+                        <img src="http://via.placeholder.com/250x250" data-default-src="http://via.placeholder.com/250x25" alt="{{ employee.name }}" class="employee-profile--avatar-image js-avatar-uploader--image">
+                    </div>
+                </div>
+                <div class="pull-left w-100 clearfix">
+
+                    {% if can_update %}
+                        <div class="form-group w-100">
+                            {{ form.first_name.label }}
+                            {{ form.first_name|add_field_textfield_classes:'form-field w-100' }}
+                        </div>
+                        <div class="form-group w-100 clear-left">
+                            {{ form.last_name.label }}
+                            {{ form.last_name|add_field_textfield_classes:'form-field w-100' }}
+                        </div>
+                        <div class="form-group w-100 clear-left">
+                            {{ form.email.label }}
+                            {{ form.email|add_field_textfield_classes:'form-field w-100' }}
+                        </div>
+                        <div class="form-group w-100 clear-left">
+                            <label>Password</label>
+                            <input class="form-field w-100" type="password" name="password">
+                        </div>
+                        <div class="form-group w-100 clear-left">
+                            <label>Password repeat</label>
+                            <input class="form-field w-100" type="password" name="password_repeat">
+                        </div>
+                    {% else %}
+                        <div class="form-group w-100">
+                            <strong>Full name</strong>: {{ employee.name }}
+                        </div>
+                        <div class="form-group w-100">
+                            <strong>Email</strong>: {{ employee.email }}
+                        </div>
+
+                    {% endif %}
+                </div>
+            </div>
+            {% if can_update %}
+                <div class="form-group w-100">
+                    <button type="submit" class="btn btn-big btn-primary w-100">Save profile</button>
+                </div>
+            {% endif %}
+        </form>
+    {% endwith %}
+
+{% endblock %}
+
+{% block extra_script %}
+
+    <script>
+
+        var ImageUploader = {
+            // Todo: move to separate file, into App.js
+            CLASS_NAME_UPLOADER: 'js-avatar-uploader',
+            CLASS_NAME_FILE_FIELD: 'js-avatar-uploader--file-field',
+            CLASS_NAME_IMAGE: 'js-avatar-uploader--image',
+
+            UPLOAD_FILE_SIZE_LIMIT: 5000000,  // Size in Bytes - 5MB.
+            UPLOAD_FILE_MIN_DIMENSIONS: 250,
+            UPLOAD_FILE_ALLOWED_MIMES: ['image/jpeg', 'image/png'],
+
+
+            registerEvents: function(){
+
+                $('.' + this.CLASS_NAME_FILE_FIELD).on('change', function(event){
+
+                    var previewImage = $('.' + ImageUploader.CLASS_NAME_IMAGE);
+
+                    if (this.files.length === 0) {
+                        previewImage.attr('src', previewImage.data('default-srx'));
+                        return;
+                    }
+
+                    var file = this.files[0];
+
+                    if(file.size > ImageUploader.UPLOAD_FILE_SIZE_LIMIT) {
+
+                        var sizeMB = String(ImageUploader.UPLOAD_FILE_SIZE_LIMIT / 1000000);
+                        alert('Your file is too big. It must be smaller than ' + sizeMB + 'Mb.');
+                        return;
+                    }
+
+                    var fileHasCorrectMimeType = false;
+
+                    for(var i = ImageUploader.UPLOAD_FILE_ALLOWED_MIMES.length - 1; i >= 0; i--){
+
+                        if(ImageUploader.UPLOAD_FILE_ALLOWED_MIMES[i] === file.type){
+                            fileHasCorrectMimeType = true;
+                            break;
+                        }
+                    }
+
+                    if(!fileHasCorrectMimeType){
+                        alert('Only JPG and PNG formats are allowed.');
+                        return;
+                    }
+
+                    var reader  = new FileReader();
+                    reader.addEventListener('load', function (event) {
+                        var img = new Image();
+                        img.onload = function(){
+
+                            var minDimension = ImageUploader.UPLOAD_FILE_MIN_DIMENSIONS;
+
+                            if(this.naturalWidth < minDimension ||
+                                this.naturalHeight < minDimension){
+                                alert('Image must have dimensions at least ' + String(minDimension) + 'px x ' + String(minDimension) + 'px.');
+                                return;
+                            }
+                            previewImage.attr('src', reader.result);
+
+                        };
+                        img.src = event.target.result;
+
+                    }, false);
+                    reader.readAsDataURL(file);
+
+                });
+
+            },
+            init: function(){
+                this.registerEvents();
+            }
+        };
+        ImageUploader.init();
+
+    </script>
+
+{% endblock %}

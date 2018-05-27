@@ -14,11 +14,11 @@
             {% if user.is_authenticated %}
                 <div class="navbar--auth-info">
                     <div class="navbar--auth-info--menu-separator"></div>
-                    <a href="#" class="navbar--auth-info--user-avatar">
+                    <a href="{{ user.get_absolute_url }}" class="navbar--auth-info--user-avatar">
                         <img src="http://via.placeholder.com/45x45" class="navbar--auth-info--user-avatar--image">
                     </a>
                     <span class="navbar--auth-info--label">Logged as:</span>
-                    <a href="#" class="navbar--auth-info--user-name">{{ user.name|truncatechars:14 }}</a>
+                    <a href="{{ user.get_absolute_url }}" class="navbar--auth-info--user-name">{{ user.name|truncatechars:14 }}</a>
                 </div>
             {% endif %}
             <ul class="navbar--menu row">

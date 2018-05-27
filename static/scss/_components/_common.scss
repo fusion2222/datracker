@@ -1,3 +1,11 @@
+@mixin clearfix() {
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+}
+
 .container{
   position: relative;
   margin: 0px auto;
@@ -23,13 +31,20 @@
   float: left;
 }
 
-.clearfix:after {
-  visibility: hidden;
-  display: block;
-  font-size: 0;
-  content: " ";
+.clearfix{
+  @include clearfix;
+}
+
+.clear-left{
+  clear: left;
+}
+
+.clear-right{
+  clear: right;
+}
+
+.clear-both{
   clear: both;
-  height: 0;
 }
 
 .no-padding-top{

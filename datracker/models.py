@@ -24,6 +24,9 @@ class Employee(AbstractUser):
     def name(self):
         return '{} {}'.format(self.first_name, self.last_name)
 
+    def get_absolute_url(self):
+        return reverse('employee-update', kwargs={'pk': self.pk})
+
     class Meta:
         # We need to override inherited User verbose_name.
         verbose_name = 'Employee'
