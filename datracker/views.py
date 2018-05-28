@@ -141,6 +141,15 @@ class EmployeeView(LoginRequiredMixin, UpdateView):
     template_name = 'employees/profile.html'
     fields = ['first_name', 'last_name', 'avatar', 'email', 'password']
 
+    def post(self, *args, **kwargs):
+
+        if not kwargs['pk'] == self.request.user.pk and not self.request.user.has_perm('datracker.can_change'):
+            raise Exception('Koloman is calling...')  # django.http.HttpResponse
+
+        output = super().post(*args, **kwargs)
+        print('\n\n', output, '\n\n')
+        return output
+
 
 class EmployeeCreateView(LoginRequiredMixin, CreateView):
     model = Employee
