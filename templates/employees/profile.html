@@ -7,7 +7,9 @@
 {% block content %}
     {% with can_update=True %} {#  perms.datracker.can_update #}
 
-        <form class="employee-profile form row">
+        <form class="employee-profile form row" action="{{ employee.get_absolute_url }}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.errors }}
             <div class="employee-profile--content">
                 <div class="form-group employee-profile--avatar">
                     <div class="employee-profile--avatar-wrapper js-avatar-uploader">
